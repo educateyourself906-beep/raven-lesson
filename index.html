@@ -1,59 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>The Raven: Student Digital Workbook</title>
+    <title>The Raven: Digital Workbook</title>
     <style>
-        body { font-family: 'Georgia', serif; background-color: #2c3e50; color: #fdf6e3; padding: 20px; }
-        .workbook { background: #34495e; padding: 30px; border-radius: 15px; max-width: 800px; margin: auto; border: 3px solid #5d4037; }
-        h1, h2 { color: #f1c40f; text-align: center; }
-        .section { background: #fff; color: #333; padding: 20px; margin: 15px 0; border-radius: 8px; }
-        #cert { display: none; text-align: center; border: 5px solid #f1c40f; padding: 40px; background: #ecf0f1; }
-        button { background: #5d4037; color: white; border: none; padding: 10px 20px; cursor: pointer; border-radius: 5px; }
+        body { font-family: 'Georgia', serif; background-image: url('assets/img_parchment_bg.jpg'); background-size: cover; color: #333; padding: 20px; }
+        .workbook { background: rgba(255, 255, 255, 0.9); padding: 30px; border-radius: 15px; max-width: 800px; margin: auto; border: 3px solid #5d4037; }
+        .step { display: none; }
+        .active { display: block; }
+        h1, h2 { color: #5d4037; text-align: center; }
+        .asset-box { background: #fdf6e3; padding: 15px; border: 1px solid #dcdcdc; margin: 10px 0; }
+        button { background: #5d4037; color: white; border: none; padding: 12px 20px; cursor: pointer; }
     </style>
 </head>
 <body>
 
-<div class="workbook" id="mainContent">
-    <h1>The Raven: Literature Lab</h1>
+<div class="workbook">
+    <img src="assets/img_header_banner.jpg" style="width:100%; border-radius:10px;">
+    <h1>The Raven: Student Lab</h1>
 
-    <div class="section" style="text-align:center;">
-        <h2>Watch: The Simpsons "The Raven"</h2>
-        <iframe width="560" height="315" src="https://www.youtube.com/embed/bLiXjaPqSyY" frameborder="0" allowfullscreen></iframe>
+    <div id="step1" class="step active">
+        <h2>Step 1: Watch</h2>
+        <div class="asset-box" style="text-align:center;">
+            <iframe width="100%" height="315" src="https://www.youtube.com/embed/bLiXjaPqSyY" frameborder="0" allowfullscreen></iframe>
+        </div>
+        <button onclick="showStep(2)">Next: Listen & Read</button>
     </div>
 
-    <div class="section">
-        <h2>Reader's Theater Script</h2>
-        <p><em>Click to listen to your section:</em></p>
-        <audio controls src="assets/audio_narrator_1.mp3"></audio>
-        <p><strong>[Poet/Advanced]:</strong> "Once upon a midnight dreary... forgotten lore."</p>
-        <audio controls src="assets/audio_raven_nevermore.mp3"></audio>
-        <p><strong>[Raven/Basic]:</strong> "Nevermore."</p>
+    <div id="step2" class="step">
+        <h2>Step 2: Listen & Read</h2>
+        <img src="assets/img_raven_icon.png" style="width:50px; float:right;">
+        <p>Play the audio for each section and read your script lines.</p>
+        <div class="asset-box">
+            <p>Narrator Section 1:</p>
+            <audio controls src="assets/audio_narrator_1.mp3"></audio>
+            <p>Narrator Section 2:</p>
+            <audio controls src="assets/audio_narrator_2.mp3"></audio>
+            <p>Narrator Section 3:</p>
+            <audio controls src="assets/audio_narrator_3.mp3"></audio>
+            <p>Homer's Lines:</p>
+            <audio controls src="assets/audio_homer_lines.mp3"></audio>
+            <p>The Raven's Lines:</p>
+            <audio controls src="assets/audio_raven_nevermore.mp3"></audio>
+        </div>
+        <button onclick="showStep(3)">Next: Final Analysis</button>
     </div>
 
-    <div class="section" id="quiz">
-        <h2>Final Analysis</h2>
-        Nickname: <input type="text" id="nickname" required><br><br>
-        1. Why is Homer sad? <textarea id="q1" style="width:90%"></textarea><br>
-        2. What does the Raven say? <input type="text" id="q2"><br>
-        <button onclick="check()">Get Certificate</button>
+    <div id="step3" class="step">
+        <h2>Step 3: Final Analysis</h2>
+        <img src="assets/img_pallas_bust.png" style="width:100px; display:block; margin:auto;">
+        <p>Nickname: <input type="text" id="nickname"></p>
+        <p>In 2 sentences, explain how the mood changes in the story.</p>
+        <textarea id="final" style="width:100%; height:80px;"></textarea><br><br>
+        <button onclick="finish()">Finish & Print Certificate</button>
     </div>
 </div>
 
-<div class="workbook" id="cert">
+<div class="workbook" id="cert" style="display:none; background-image: url('assets/img_cert_frame.png'); background-size: contain; background-repeat: no-repeat; text-align: center;">
+    <br><br>
     <h1>Certificate of Achievement</h1>
     <h2 id="winner"></h2>
     <p>Has successfully mastered "The Raven" analysis.</p>
-    <button onclick="window.print()">Print/Save Certificate</button>
+    <button class="no-print" onclick="window.print()">Print/Save Certificate</button>
 </div>
 
 <script>
-    function check() {
-        // Simple logic check for proof of work
-        if(document.getElementById('nickname').value != "" && document.getElementById('q1').value.length > 10) {
+    function showStep(s) {
+        document.querySelectorAll('.step').forEach(div => div.classList.remove('active'));
+        document.getElementById('step' + s).classList.add('active');
+    }
+    function finish() {
+        if(document.getElementById('nickname').value != "" && document.getElementById('final').value.length > 20) {
             document.getElementById('winner').innerText = document.getElementById('nickname').value;
-            document.getElementById('mainContent').style.display = 'none';
+            document.querySelector('.workbook').style.display = 'none';
             document.getElementById('cert').style.display = 'block';
-        } else { alert("Please enter your nickname and a complete answer for question 1!"); }
+        } else { alert("Please enter your nickname and a longer reflection!"); }
     }
 </script>
 </body>
